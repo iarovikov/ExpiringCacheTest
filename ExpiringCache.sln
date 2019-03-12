@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpiringCache", "ExpiringCache\ExpiringCache.csproj", "{AB8777E3-AB35-4853-9365-77E840A398E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpiringCache.Tests", "ExpiringCache.Tests\ExpiringCache.Tests.csproj", "{DDDEC00F-69A6-49C0-867B-205ADB5ED933}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{AB8777E3-AB35-4853-9365-77E840A398E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB8777E3-AB35-4853-9365-77E840A398E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB8777E3-AB35-4853-9365-77E840A398E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDDEC00F-69A6-49C0-867B-205ADB5ED933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDDEC00F-69A6-49C0-867B-205ADB5ED933}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDDEC00F-69A6-49C0-867B-205ADB5ED933}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDDEC00F-69A6-49C0-867B-205ADB5ED933}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
