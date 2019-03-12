@@ -3,8 +3,8 @@ using System.Collections.Concurrent;
 
 namespace ExpiringCache
 {
-    
-    public class ExpiringCache<TKey, TItem> : IExpiringCache<TKey, TItem>
+    /// <inheritdoc />
+    public class ConcurrentDictionaryExpiringCache<TKey, TItem> : IExpiringCache<TKey, TItem>
     {
         private const int DefaultDurationInSeconds = 30;
         private const int DefaultMaxCapacity = 20;
@@ -12,13 +12,13 @@ namespace ExpiringCache
         private TimeSpan _duration;
         private int _maxCapacity;
 
-        private ConcurrentDictionary<TKey, TItem> _items;
+        private ConcurrentDictionary<TKey, TItem> _items = new ConcurrentDictionary<TKey, TItem>();
         
-        public ExpiringCache() : this(TimeSpan.FromSeconds(DefaultDurationInSeconds), DefaultMaxCapacity)
+        public ConcurrentDictionaryExpiringCache() : this(TimeSpan.FromSeconds(DefaultDurationInSeconds), DefaultMaxCapacity)
         {
         }
 
-        public ExpiringCache(TimeSpan duration, int maxCapacity)
+        public ConcurrentDictionaryExpiringCache(TimeSpan duration, int maxCapacity)
         {
             _duration = duration;
             _maxCapacity = maxCapacity;
