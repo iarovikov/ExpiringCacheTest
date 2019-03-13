@@ -10,8 +10,8 @@ namespace ExpiringCache
         private const int DefaultDurationInSeconds = 30;
         private const int DefaultMaxCapacity = 20;
 
-        private TimeSpan _duration;
-        public int MaxCapacity;
+        private readonly TimeSpan _duration;
+        public readonly int MaxCapacity;
         public int Count => _items.Count;
 
         private readonly ConcurrentDictionary<TKey, CacheItem<TKey, TItem>> _items
