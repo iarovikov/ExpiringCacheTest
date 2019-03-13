@@ -7,9 +7,8 @@ namespace ExpiringCache
         public CacheItem(TKey key, TItem item, DateTimeOffset expirationTime)
         {
             Key = key;
-            _item = item;
+            Item = item;
             ExpirationTime = expirationTime;
-            LastAccessedTime = DateTimeOffset.Now;
         }
 
         public TKey Key { get; }
@@ -20,8 +19,15 @@ namespace ExpiringCache
         {
             get
             {
+                // By 'accessing' CacheItem element we assume that the actual 
+                // Item was accessed (get or set), not the Key or ExpirationTime
                 LastAccessedTime = DateTimeOffset.Now;
                 return _item;
+            }
+            private set
+            {
+                LastAccessedTime = DateTimeOffset.Now;
+                _item = value;
             }
         }
 
