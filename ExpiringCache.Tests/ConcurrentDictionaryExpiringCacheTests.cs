@@ -18,6 +18,15 @@ namespace ExpiringCache.Tests
         }
 
         [Fact]
+        public void ThrowsExceptionIfCreateWithNegativeMaxCapacity()
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.Throws<ArgumentException>(() => new ConcurrentDictionaryExpiringCache<int, int>(-48));
+        }
+
+        [Fact]
         public void ReturnsFalseIfThereIsNoValue()
         {
             // Arrange
