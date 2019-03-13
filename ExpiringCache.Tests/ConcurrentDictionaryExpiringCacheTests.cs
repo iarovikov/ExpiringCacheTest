@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Xunit;
 
 namespace ExpiringCache.Tests
@@ -60,6 +61,23 @@ namespace ExpiringCache.Tests
             // Assert
             Assert.True(result);
             Assert.Equal(expectedItem, actualItem);
+        }
+
+        [Fact]
+        public void ReturnsFalseIfTheItemIsExpired()
+        {
+            // Arrange
+            var sut = new ConcurrentDictionaryExpiringCache<string, string>();
+            var expired = "expired";
+            
+            // Act
+            sut.Add("foo", expired, TimeSpan.FromSeconds(2));
+            Thread.Sleep(3000);
+            var result = sut.TryGet("foo", out var actualItem);
+            
+            // Assert
+            Assert.False(result);
+            Assert.Null(actualItem);
         }
     }
 }

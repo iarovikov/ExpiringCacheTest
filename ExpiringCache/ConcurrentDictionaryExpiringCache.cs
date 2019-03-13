@@ -37,7 +37,11 @@ namespace ExpiringCache
 
         public void Add(TKey key, TItem item, TimeSpan duration)
         {
-            throw new NotImplementedException();
+            var now = DateTimeOffset.UtcNow;
+            if (!_items.TryAdd(key, new CacheItem<TKey, TItem>(key, item, now.Add(duration))))
+            {
+                _items[key] = new CacheItem<TKey, TItem>(key, item, now.Add(duration));
+            }
         }
 
 
