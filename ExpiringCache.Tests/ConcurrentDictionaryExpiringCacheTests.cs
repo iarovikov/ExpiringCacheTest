@@ -44,5 +44,22 @@ namespace ExpiringCache.Tests
             Assert.True(result);
             Assert.Equal(expectedItem, actualItem);
         }
+        
+        [Fact]
+        public void UpdatesExistingValue()
+        {
+            // Arrange
+            var sut = new ConcurrentDictionaryExpiringCache<string, string>();
+            var expectedItem = "baz";
+            
+            // Act
+            sut.Add("foo", "bar");
+            sut.Add("foo", expectedItem);
+            var result = sut.TryGet("foo", out var actualItem);
+            
+            // Assert
+            Assert.True(result);
+            Assert.Equal(expectedItem, actualItem);
+        }
     }
 }

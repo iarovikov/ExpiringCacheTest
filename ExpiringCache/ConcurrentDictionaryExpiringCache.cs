@@ -26,7 +26,10 @@ namespace ExpiringCache
         
         public void Add(TKey key, TItem item)
         {
-            throw new NotImplementedException();
+            if (!_items.TryAdd(key, item))
+            {
+                _items[key] = item;
+            }
         }
 
         public void Add(TKey key, TItem item, TimeSpan duration)
@@ -37,8 +40,7 @@ namespace ExpiringCache
         
         public bool TryGet(TKey key, out TItem item)
         {
-            item = default(TItem);
-            return false;
+            return _items.TryGetValue(key, out item);
         }
 
         public bool Remove(TKey key)
