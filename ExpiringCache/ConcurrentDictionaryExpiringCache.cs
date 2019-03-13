@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 
 namespace ExpiringCache
 {
@@ -28,6 +29,9 @@ namespace ExpiringCache
 
         public ConcurrentDictionaryExpiringCache(TimeSpan duration, int maxCapacity)
         {
+            if (maxCapacity <= 0)
+                throw new ArgumentException($"Maximum capacity should be more than 0.");
+            
             _duration = duration;
             MaxCapacity = maxCapacity;
         }
@@ -35,6 +39,12 @@ namespace ExpiringCache
         public void Add(TKey key, TItem item)
         {
             var now = DateTimeOffset.UtcNow;
+            if (Count == MaxCapacity)
+            {
+                var leastAccessed = _items.OrderBy(it => it.Value.LastAccessedTime).First();
+                Remove(leastAccessed.Key);
+            }
+
             if (!_items.TryAdd(key, new CacheItem<TKey, TItem>(key, item, now.Add(_duration))))
             {
                 _items[key] = new CacheItem<TKey, TItem>(key, item, now.Add(_duration));
@@ -73,7 +83,7 @@ namespace ExpiringCache
 
         public bool Remove(TKey key)
         {
-            throw new NotImplementedException();
+            return _items.TryRemove(key, out var result);
         }
     }
 }
