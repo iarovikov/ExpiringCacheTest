@@ -8,13 +8,15 @@ namespace ExpiringCache
     {
         private const int DefaultDurationInSeconds = 30;
         private const int DefaultMaxCapacity = 20;
-        
+
         private TimeSpan _duration;
         private int _maxCapacity;
 
-        private readonly ConcurrentDictionary<TKey, TItem> _items = new ConcurrentDictionary<TKey, TItem>();
-        
-        public ConcurrentDictionaryExpiringCache() : this(TimeSpan.FromSeconds(DefaultDurationInSeconds), DefaultMaxCapacity)
+        private readonly ConcurrentDictionary<TKey, CacheItem<TKey, TItem>> _items
+            = new ConcurrentDictionary<TKey, CacheItem<TKey, TItem>>();
+
+        public ConcurrentDictionaryExpiringCache() : this(TimeSpan.FromSeconds(DefaultDurationInSeconds),
+            DefaultMaxCapacity)
         {
         }
 
@@ -23,12 +25,13 @@ namespace ExpiringCache
             _duration = duration;
             _maxCapacity = maxCapacity;
         }
-        
+
         public void Add(TKey key, TItem item)
         {
-            if (!_items.TryAdd(key, item))
+            var now = DateTimeOffset.UtcNow;
+            if (!_items.TryAdd(key, new CacheItem<TKey, TItem>(key, item, now.Add(_duration))))
             {
-                _items[key] = item;
+                _items[key] = new CacheItem<TKey, TItem>(key, item, now.Add(_duration));
             }
         }
 
@@ -37,10 +40,25 @@ namespace ExpiringCache
             throw new NotImplementedException();
         }
 
-        
+
         public bool TryGet(TKey key, out TItem item)
         {
-            return _items.TryGetValue(key, out item);
+            CacheItem<TKey, TItem> result;
+            if (!_items.TryGetValue(key, out result))
+            {
+                item = default(TItem);
+                return false;
+            }
+            else if (result.ExpirationTime < DateTimeOffset.Now)
+            {
+                item = default(TItem);
+                return false;
+            }
+            else
+            {
+                item = result.Item;
+                return true;
+            }
         }
 
         public bool Remove(TKey key)
