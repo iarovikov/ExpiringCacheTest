@@ -10,7 +10,8 @@ namespace ExpiringCache
         private const int DefaultMaxCapacity = 20;
 
         private TimeSpan _duration;
-        private int _maxCapacity;
+        public int MaxCapacity;
+        public int Count => _items.Count;
 
         private readonly ConcurrentDictionary<TKey, CacheItem<TKey, TItem>> _items
             = new ConcurrentDictionary<TKey, CacheItem<TKey, TItem>>();
@@ -20,10 +21,15 @@ namespace ExpiringCache
         {
         }
 
+        public ConcurrentDictionaryExpiringCache(int maxCapacity) : this(TimeSpan.FromSeconds(DefaultDurationInSeconds),
+            maxCapacity)
+        {
+        }
+
         public ConcurrentDictionaryExpiringCache(TimeSpan duration, int maxCapacity)
         {
             _duration = duration;
-            _maxCapacity = maxCapacity;
+            MaxCapacity = maxCapacity;
         }
 
         public void Add(TKey key, TItem item)
