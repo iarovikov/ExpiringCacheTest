@@ -12,7 +12,7 @@ namespace ExpiringCache
         private TimeSpan _duration;
         private int _maxCapacity;
 
-        private ConcurrentDictionary<TKey, TItem> _items = new ConcurrentDictionary<TKey, TItem>();
+        private readonly ConcurrentDictionary<TKey, TItem> _items = new ConcurrentDictionary<TKey, TItem>();
         
         public ConcurrentDictionaryExpiringCache() : this(TimeSpan.FromSeconds(DefaultDurationInSeconds), DefaultMaxCapacity)
         {
