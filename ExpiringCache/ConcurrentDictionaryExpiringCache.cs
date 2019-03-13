@@ -37,7 +37,8 @@ namespace ExpiringCache
         
         public bool TryGet(TKey key, out TItem item)
         {
-            throw new NotImplementedException();
+            item = default(TItem);
+            return false;
         }
 
         public bool Remove(TKey key)
