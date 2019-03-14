@@ -2,6 +2,11 @@ using System;
 
 namespace ExpiringCache
 {
+    /// <summary>
+    /// Generic cache item.
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TItem"></typeparam>
     public class CacheItem<TKey, TItem>
     {
         public CacheItem(TKey key, TItem item, DateTimeOffset expirationTime)

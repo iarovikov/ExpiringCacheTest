@@ -11,35 +11,50 @@ namespace ExpiringCache
         private const int DefaultMaxCapacity = 20;
 
         private readonly TimeSpan _duration;
-        public readonly int MaxCapacity;
+        private readonly int _maxCapacity;
         public int Count => _items.Count;
 
         private readonly ConcurrentDictionary<TKey, CacheItem<TKey, TItem>> _items
             = new ConcurrentDictionary<TKey, CacheItem<TKey, TItem>>();
 
+        /// <summary>
+        /// Initialize a new instance of <see cref="ConcurrentDictionaryExpiringCache{TKey,TItem}"/>
+        /// with default Duration and MaxCapacity.
+        /// </summary>
         public ConcurrentDictionaryExpiringCache() : this(TimeSpan.FromSeconds(DefaultDurationInSeconds),
             DefaultMaxCapacity)
         {
         }
 
+        /// <summary>
+        /// Initialize a new instance of <see cref="ConcurrentDictionaryExpiringCache{TKey,TItem}"/>
+        /// with default Duration.
+        /// </summary>
+        /// <param name="maxCapacity">Sets the maximum capacity of the instance.</param>
         public ConcurrentDictionaryExpiringCache(int maxCapacity) : this(TimeSpan.FromSeconds(DefaultDurationInSeconds),
             maxCapacity)
         {
         }
 
+        /// <summary>
+        /// Initialize a new instance of <see cref="ConcurrentDictionaryExpiringCache{TKey,TItem}"/>
+        /// </summary>
+        /// <param name="duration">Duration of the each cache element.</param>
+        /// <param name="maxCapacity">Sets the maximum capacity of the instance.</param>
+        /// <exception cref="ArgumentException"></exception>
         public ConcurrentDictionaryExpiringCache(TimeSpan duration, int maxCapacity)
         {
             if (maxCapacity <= 0)
                 throw new ArgumentException($"Maximum capacity should be more than 0.");
             
             _duration = duration;
-            MaxCapacity = maxCapacity;
+            _maxCapacity = maxCapacity;
         }
 
         public void Add(TKey key, TItem item)
         {
             var now = DateTimeOffset.UtcNow;
-            if (Count == MaxCapacity)
+            if (Count == _maxCapacity)
             {
                 var leastAccessed = _items.OrderBy(it => it.Value.LastAccessedTime).First();
                 Remove(leastAccessed.Key);
